@@ -30,6 +30,7 @@ class Identity(Protocol):
 
 IdentityType = TypeVar("IdentityType", bound=Identity)
 IdentityType_contra = TypeVar("IdentityType_contra", bound=Identity, contravariant=True)
+IdentityType_cov = TypeVar("IdentityType_cov", bound=Identity, covariant=True)
 
 
 class IdentityProperties(TypedDict):
@@ -38,10 +39,12 @@ class IdentityProperties(TypedDict):
     ...
 
 
-IdentityPropertiesType_contra = TypeVar("IdentityPropertiesType", bound=IdentityProperties, contravariant=True)
+IdentityPropertiesType_contra = TypeVar(
+    "IdentityPropertiesType_contra", bound=IdentityProperties, contravariant=True
+)
 
 
-class IdentityResolver(Protocol):
+class IdentityResolver(Protocol[IdentityType_cov, IdentityPropertiesType_contra]):
     """Used to load a user's `Identity` from a given source.
 
     Each `Identity` may have one or more resolver implementations.
@@ -49,7 +52,7 @@ class IdentityResolver(Protocol):
 
     async def get_identity(
         self, *, identity_properties: IdentityPropertiesType_contra
-    ) -> IdentityType:
+    ) -> IdentityType_cov:
         """Load the user's identity from this resolver.
 
         :param identity_properties: Properties used to help determine the
