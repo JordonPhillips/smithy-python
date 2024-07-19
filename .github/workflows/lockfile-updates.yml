@@ -9,7 +9,7 @@ permissions:
 jobs:
   dependabot-lockfile-update:
     runs-on: ubuntu-latest
-    if: github.actor == 'JordonPhillips' && contains(github.event.pull_request.title, 'python group')
+    # if: github.actor == 'JordonPhillips' && contains(github.event.pull_request.title, 'python group')
 
     steps:
       - name: Checkout PR
