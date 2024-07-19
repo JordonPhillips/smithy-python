@@ -77,7 +77,7 @@ build-py: lint-py check-py test-py
 
 
 ## Update lockfiles
-update-lockfiles:
+update-lockfiles: pants
 	./pants generate-lockfiles
 
 
