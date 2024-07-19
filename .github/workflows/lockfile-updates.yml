@@ -1,5 +1,8 @@
 name: Update Lockfiles Post-Dependabot
-on: pull_request
+on:
+  pull_request:
+    branches:
+      - develop
 
 permissions:
   pull-requests: write
@@ -9,13 +12,11 @@ permissions:
 jobs:
   dependabot-lockfile-update:
     runs-on: ubuntu-latest
-    # if: github.actor == 'JordonPhillips' && contains(github.event.pull_request.title, 'python group')
+    if: github.actor == 'JordonPhillips' && contains(github.event.pull_request.title, 'python group')
 
     steps:
-      - name: Checkout PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh pr checkout ${{ github.event.pull_request.number }}
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Setup Python - 3.12
         uses: actions/setup-python@v5
@@ -32,13 +33,16 @@ jobs:
           pants-ci-config: pants.ci.toml
 
       - name: Update Lockfiles
-        run: make update-lockfiles
+        run: |
+          make update-lockfiles
 
       - name: Commit and Push Changes
-        if: test -n "$(git status --porcelain)"
         run: |
-          git config user.name 'smithy-automation'
-          git config user.email 'github-smithy-automation@amazon.com'
-          git commit -m "Update lockfiles"
-          git push
+          git add .
+          if [[ -n $(git status --porcelain) ]]; then
+            git config user.name 'smithy-automation'
+            git config user.email 'github-smithy-automation@amazon.com'
+            git commit -m "Update lockfiles"
+            git push
+          fi
 
