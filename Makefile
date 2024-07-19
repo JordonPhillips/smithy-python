@@ -76,6 +76,11 @@ test-py: pants
 build-py: lint-py check-py test-py
 
 
+## Update lockfiles
+update-lockfiles: pants
+	./pants generate-lockfiles
+
+
 ## Clean up generated code, artifacts, and remove pants.
 clean:
 	rm -rf pants dist/
