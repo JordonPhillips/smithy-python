@@ -424,4 +424,4 @@ class AsyncBytesProvider:
         return self
 
     async def __aexit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
-        await self.close()
+        await self.close(flush=True)
